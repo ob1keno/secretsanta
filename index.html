@@ -5,20 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>🎅 Тайный Санта</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎅</text></svg>">
+<meta property="og:title" content="🎅 Тайный Санта">
+<meta property="og:description" content="Твой конверт с именем получателя">
+<meta property="og:type" content="website">
 <style>
   :root{
     --bg:#0a1018;
     --card:#131f2c;
-    --card2:#182636;
     --line:#23364a;
     --text:#e6eef7;
     --muted:#8fa3b8;
     --red:#e5484d;
     --gold:#f4c35a;
-    --radius:18px;
+    --green:#7ee2a8;
   }
   *{box-sizing:border-box}
   html,body{min-height:100%}
+  html{background:#0a1018}
   body{
     margin:0;
     color:var(--text);
@@ -54,14 +57,18 @@
   .tab:hover{color:var(--text)}
   .tab.active{background:linear-gradient(180deg,#20344a,#1a2a3c);color:var(--text);box-shadow:0 2px 10px rgba(0,0,0,.35)}
 
-  .card{background:linear-gradient(180deg,rgba(24,38,54,.94),rgba(19,31,44,.94));border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:14px;box-shadow:0 12px 32px rgba(0,0,0,.28)}
+  .card{background:linear-gradient(180deg,rgba(24,38,54,.94),rgba(19,31,44,.94));border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:14px;box-shadow:0 12px 32px rgba(0,0,0,.28)}
+  .card-title{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:800;margin:0 0 12px}
 
   .lbl{display:block;font-weight:700;font-size:14px;margin-bottom:9px}
+  .lbl.second{margin-top:18px}
   textarea,input{
     width:100%;background:#0d1723;border:1px solid var(--line);color:var(--text);
     border-radius:12px;padding:12px 13px;font:inherit;outline:none;transition:border-color .18s,box-shadow .18s;
   }
-  textarea{resize:vertical;min-height:100px;line-height:1.55}
+  textarea{resize:vertical;min-height:92px;line-height:1.55}
+  #keys{font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;font-size:12.5px;line-height:1.5;min-height:80px}
+  textarea.auto{resize:none}
   textarea::placeholder,input::placeholder{color:#54697f}
   textarea:focus,input:focus{border-color:#3d5a78;box-shadow:0 0 0 3px rgba(61,90,120,.25)}
 
@@ -80,6 +87,8 @@
   .btn.ghost{background:rgba(255,255,255,.05)}
   .btn.sm{padding:8px 12px;font-size:13.5px;border-radius:10px}
   .btn.danger{color:#ffb3b6;border-color:rgba(229,72,77,.4);background:rgba(229,72,77,.08)}
+  .btn.tg{background:linear-gradient(180deg,#37b3f0,#229ed9);border-color:#48bff5;color:#04212f;font-weight:800}
+  .btn.tg:hover{filter:brightness(1.08)}
 
   .err{color:#ff9ea1;font-size:14px;margin:10px 0 0}
   .err:empty{display:none}
@@ -88,21 +97,29 @@
   .switch-hint a:hover{text-decoration:underline}
 
   .result-head{border-color:rgba(47,191,113,.28);background:linear-gradient(180deg,rgba(47,191,113,.09),rgba(19,31,44,.94))}
-  .ok-line{color:#7ee2a8;font-weight:700;font-size:14.5px;margin:0 0 8px}
+  .ok-line{color:var(--green);font-weight:700;font-size:14.5px;margin:0 0 8px}
   .hint{color:var(--muted);font-size:13.5px;margin:0}
-  .hint.warn{color:#ffd08a;margin-top:20px}
+  .hint.sm{font-size:12.5px;margin:-2px 0 9px}
+  .hint.warn{color:#ffd08a;margin-top:16px}
+  .hint.ok2{color:var(--green);margin-top:9px}
+  .hint.warn2{color:#ffd08a;margin-top:9px}
+  .hint.lead{margin-bottom:12px}
 
   .pcard{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px}
-  .pcard-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .pcard-head{display:flex;align-items:center;gap:10px}
   .avatar{width:30px;height:30px;flex:0 0 auto;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#f4c35a,#e5484d);color:#1a1208;font-weight:800;font-size:13px}
   .pname{font-weight:700;word-break:break-word}
   .code{
     display:block;font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;
     font-size:12px;line-height:1.55;color:#9fd0ff;background:#0a1119;border:1px dashed #24405c;
-    border-radius:10px;padding:10px;word-break:break-all;user-select:all;
+    border-radius:10px;padding:10px;word-break:break-all;user-select:all;margin-top:10px;
+  }
+  .pubkey{
+    display:block;font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;
+    font-size:13px;color:#8ef0b8;background:#0a1119;border:1px solid #1f4a35;
+    border-radius:10px;padding:11px;word-break:break-all;user-select:all;margin:10px 0 4px;
   }
   .pactions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
-  .pcard .code{margin-top:10px}
 
   .envelope{
     text-align:center;padding:34px 20px;
@@ -113,7 +130,9 @@
     font-size:42px;font-weight:800;letter-spacing:-.02em;margin:12px 0 8px;word-break:break-word;
     background:linear-gradient(90deg,#ffe9b5,#f4c35a);-webkit-background-clip:text;background-clip:text;color:transparent;
   }
-  .env-meta{color:var(--gold);font-size:14px;font-weight:600}
+
+  .step{display:flex;gap:10px;align-items:flex-start;margin-bottom:6px}
+  .step-num{flex:0 0 auto;width:22px;height:22px;border-radius:50%;background:rgba(244,195,90,.16);color:var(--gold);font-size:12px;font-weight:800;display:grid;place-items:center;margin-top:2px}
 
   .how{margin-top:12px;color:var(--muted);font-size:14px}
   .how summary{cursor:pointer;font-weight:700;color:#b9cbdd;padding:6px 0;list-style:none}
@@ -147,18 +166,23 @@
   <header class="hero">
     <div class="hero-emoji">🎅</div>
     <h1>Тайный Санта</h1>
-    <p class="sub">Жеребьёвка, в которой никто не подглядывает</p>
+    <p class="sub">Жеребьёвка, в которой не подглядывает никто — даже организатор</p>
   </header>
 
   <nav class="tabs" role="tablist">
-    <button class="tab active" id="tabbtn-org" role="tab" aria-controls="tab-org">Организатор</button>
-    <button class="tab" id="tabbtn-me" role="tab" aria-controls="tab-me">Мой конверт</button>
+    <button class="tab active" id="tabbtn-org" role="tab">Организатор</button>
+    <button class="tab" id="tabbtn-me" role="tab">Мой конверт</button>
   </nav>
 
   <section id="tab-org" class="panel" role="tabpanel">
     <div class="card">
       <label class="lbl" for="names">Кто участвует — по одному в строке</label>
-      <textarea id="names" rows="6" placeholder="Аня&#10;Боря&#10;Вера&#10;Гоша"></textarea>
+      <textarea id="names" class="auto" rows="4" placeholder="Аня&#10;Боря&#10;Вера&#10;Гоша"></textarea>
+
+      <label class="lbl second" for="keys">Ключи участников</label>
+      <p class="hint sm">Каждый присылает строку вида «Аня: pk.…». Вставь все сюда, по одной на строку.</p>
+      <textarea id="keys" class="auto" rows="4" placeholder="Аня: pk.AxWHM0wCt0KQ1aewL1C46PE4E9d2p0EcEzYD_rVZdGJf&#10;Боря: pk.CuRG8t…"></textarea>
+      <p id="key-status" class="hint"></p>
 
       <div class="grid2">
         <label class="field"><span>Бюджет</span><input id="budget" type="text" placeholder="до 1500 ₽"></label>
@@ -177,24 +201,49 @@
   </section>
 
   <section id="tab-me" class="panel" role="tabpanel" hidden>
+    <div class="card">
+      <div class="card-title">1 · Твой ключ</div>
+
+      <div id="key-none">
+        <p class="hint lead">Ключ создаётся здесь, в твоём браузере, и никуда не отправляется. Организатор получит только публичный код — открыть твой конверт он не сможет.</p>
+        <button id="makekey" class="btn primary">🔑 Создать мой ключ</button>
+      </div>
+
+      <div id="key-has" hidden>
+        <p class="hint lead">Впиши своё имя и отправь организатору одну строку — больше ничего не нужно.</p>
+        <input id="myname" type="text" placeholder="Твоё имя в игре">
+        <code class="pubkey" id="pubkey"></code>
+        <div class="pactions">
+          <button id="copykey" class="btn sm">📋 Скопировать строку</button>
+          <button id="savekey" class="btn ghost sm">💾 Сохранить</button>
+          <button id="loadkey" class="btn ghost sm">📂 Восстановить</button>
+        </div>
+        <p class="hint warn">Ключ живёт только в этом браузере. Почистишь данные — потеряешь доступ к конверту, поэтому лучше сохрани файл.</p>
+      </div>
+
+      <input type="file" id="keyfile" accept="application/json,.json" hidden>
+    </div>
+
     <div class="card" id="paste-card">
-      <label class="lbl" for="code">Вставь свой код</label>
-      <textarea id="code" rows="3" placeholder="v1.…" spellcheck="false"></textarea>
+      <div class="card-title">2 · Твой конверт</div>
+      <textarea id="code" rows="3" placeholder="k1.…" spellcheck="false"></textarea>
       <button id="open" class="btn primary">✉️ Открыть конверт</button>
       <p id="me-err" class="err" role="alert"></p>
     </div>
+
     <div id="envelope" hidden></div>
   </section>
 
   <details class="how">
     <summary>Как это работает</summary>
     <ol>
-      <li><b>Организатор</b> вписывает всех участников и нажимает «Провести жеребьёвку».</li>
-      <li>Страница выдаёт каждому <b>запечатанный конверт</b> — код, внутри которого спрятано имя получателя.</li>
-      <li>Организатор отправляет каждому его код в личку. Участник вставляет код во вкладке <b>«Мой конверт»</b> и видит только своё имя.</li>
+      <li><b>Каждый создаёт ключ</b> у себя на вкладке «Мой конверт» и присылает организатору строку «Имя: pk.…». Секретная часть ключа остаётся в его браузере.</li>
+      <li><b>Организатор</b> вставляет имена и все ключи, нажимает «Провести жеребьёвку».</li>
+      <li>Страница выдаёт <b>конверт для каждого</b> — код, зашифрованный на ключ получателя. Прочитать его может только владелец ключа.</li>
+      <li>Каждый вставляет свой код во вкладке «Мой конверт» и видит имя. <b>Организатор видит только шифр.</b></li>
     </ol>
-    <p>Жеребьёвка исключает «подарок самому себе» и взаимные пары (Аня → Боря и Боря → Аня). Нужно минимум 3 человека.</p>
-    <p>Честно: организатор технически может открыть чужой код, если очень захочет, — поэтому просто не подглядывай 🙂 Остальные участники чужих кодов не видят и узнать ничего не могут.</p>
+    <p>Пары не показываются на экране и не сохраняются: страница держит их в памяти только на время жеребьёвки. В сохранённых данных остаются имена, ключи и коды — но не то, кто кому дарит.</p>
+    <p>Честная граница: организатор запускает страницу на своём компьютере, поэтому при большом желании он может переписать её код и подсмотреть. Но «просто посмотреть» — не получится: для этого нужно именно взламывать. Остальные участники не видят ничего даже теоретически.</p>
   </details>
 </main>
 
@@ -202,6 +251,8 @@
 
 <script id="ss-core">
 'use strict';
+
+/* ============ случайность ============ */
 
 function ssRandInt(max){
   if (globalThis.crypto && globalThis.crypto.getRandomValues){
@@ -223,9 +274,8 @@ function ssShuffle(list){
   return a;
 }
 
-/* Возвращает массив: giver i дарит names[result[i]].
-   Без «сам себе» и без взаимных пар. Для n>=3 решение существует всегда
-   (подходит любой цикл длины n), поэтому перебор сходится быстро. */
+/* giver i дарит names[p[i]]. Без «сам себе» и без взаимных пар.
+   Для n>=3 решение есть всегда (годится любой цикл длины n). */
 function ssMakeAssignment(names){
   const n = names.length;
   if (n < 3) throw new Error('need_at_least_3');
@@ -247,9 +297,11 @@ function ssMakeAssignment(names){
   return null;
 }
 
+/* ============ кодировки ============ */
+
 const ssEnc = new TextEncoder();
 const ssDec = new TextDecoder();
-const ssHasSubtle = !!(globalThis.crypto && globalThis.crypto.subtle && globalThis.crypto.getRandomValues);
+const ssSubtle = (globalThis.crypto && globalThis.crypto.subtle) || null;
 
 function ssB64u(bytes){
   let s = '';
@@ -269,42 +321,155 @@ function ssUnb64u(str){
   return out;
 }
 
-async function ssSeal(obj){
-  const json = JSON.stringify(obj);
-  if (ssHasSubtle){
-    const key = globalThis.crypto.getRandomValues(new Uint8Array(16));
-    const iv = globalThis.crypto.getRandomValues(new Uint8Array(12));
-    const ck = await globalThis.crypto.subtle.importKey('raw', key, { name: 'AES-GCM' }, false, ['encrypt']);
-    const ct = new Uint8Array(await globalThis.crypto.subtle.encrypt({ name: 'AES-GCM', iv }, ck, ssEnc.encode(json)));
-    const payload = new Uint8Array(iv.length + ct.length);
-    payload.set(iv, 0);
-    payload.set(ct, iv.length);
-    return 'v1.' + ssB64u(key) + '.' + ssB64u(payload);
-  }
-  return 'v0.' + ssB64u(ssEnc.encode(json));
+function ssNorm(s){
+  return String(s == null ? '' : s).replace(/\s+/g, ' ').trim().toLocaleLowerCase('ru');
 }
 
-async function ssOpen(code){
-  const c = String(code || '').trim().replace(/\s+/g, '');
-  if (!c) throw new Error('empty');
-  if (c.indexOf('v0.') === 0){
-    return JSON.parse(ssDec.decode(ssUnb64u(c.slice(3))));
+/* ============ P-256: сжатие точки ============ */
+
+const SS_P = 0xffffffff00000001000000000000000000000000ffffffffffffffffffffffffn;
+const SS_B = 0x5ac635d8aa3a93e7b3ebbd55769886bc651d06b0cc53b0f63bce3c3e27d2604bn;
+
+function ssBytesToBig(bytes){
+  let hex = '';
+  for (let i = 0; i < bytes.length; i++) hex += bytes[i].toString(16).padStart(2, '0');
+  return hex ? BigInt('0x' + hex) : 0n;
+}
+
+function ssBigToBytes(n, len){
+  const out = new Uint8Array(len);
+  let hex = n.toString(16);
+  if (hex.length % 2) hex = '0' + hex;
+  const bytes = [];
+  for (let i = 0; i < hex.length; i += 2) bytes.push(parseInt(hex.slice(i, i + 2), 16));
+  if (bytes.length > len) throw new Error('overflow');
+  out.set(bytes, len - bytes.length);
+  return out;
+}
+
+function ssModPow(base, exp, mod){
+  let r = 1n, b = base % mod, e = exp;
+  while (e > 0n){
+    if (e & 1n) r = (r * b) % mod;
+    b = (b * b) % mod;
+    e >>= 1n;
   }
-  if (c.indexOf('v1.') === 0){
-    if (!ssHasSubtle) throw new Error('no_subtle');
-    const rest = c.slice(3);
-    const dot = rest.indexOf('.');
-    if (dot < 1) throw new Error('bad_format');
-    const key = ssUnb64u(rest.slice(0, dot));
-    const payload = ssUnb64u(rest.slice(dot + 1));
-    if (payload.length < 13) throw new Error('bad_format');
-    const iv = payload.subarray(0, 12);
-    const ct = payload.subarray(12);
-    const ck = await globalThis.crypto.subtle.importKey('raw', key, { name: 'AES-GCM' }, false, ['decrypt']);
-    const pt = await globalThis.crypto.subtle.decrypt({ name: 'AES-GCM', iv }, ck, ct);
-    return JSON.parse(ssDec.decode(pt));
+  return r;
+}
+
+function ssCompress(raw){
+  if (raw.length !== 65 || raw[0] !== 4) throw new Error('bad_pub');
+  const y = ssBytesToBig(raw.subarray(33));
+  const out = new Uint8Array(33);
+  out[0] = (y & 1n) ? 3 : 2;
+  out.set(raw.subarray(1, 33), 1);
+  return out;
+}
+
+function ssDecompress(c){
+  if (c.length !== 33 || (c[0] !== 2 && c[0] !== 3)) throw new Error('bad_point');
+  const x = ssBytesToBig(c.subarray(1));
+  let rhs = (ssModPow(x, 3n, SS_P) - (3n * x) % SS_P + SS_B) % SS_P;
+  if (rhs < 0n) rhs += SS_P;
+  let y = ssModPow(rhs, (SS_P + 1n) / 4n, SS_P);
+  if ((y * y) % SS_P !== rhs) throw new Error('not_on_curve');
+  if ((y & 1n) !== (c[0] === 3 ? 1n : 0n)) y = SS_P - y;
+  const out = new Uint8Array(65);
+  out[0] = 4;
+  out.set(ssBigToBytes(x, 32), 1);
+  out.set(ssBigToBytes(y, 32), 33);
+  return out;
+}
+
+/* ============ ключи ============ */
+
+function ssCheckKey(pubCode){
+  const s = String(pubCode == null ? '' : pubCode).trim().replace(/^pk\./, '');
+  if (!/^[A-Za-z0-9_-]+$/.test(s)) throw new Error('bad_key_chars');
+  return ssDecompress(ssUnb64u(s));
+}
+
+async function ssKeygen(){
+  if (!ssSubtle) throw new Error('no_crypto');
+  const kp = await ssSubtle.generateKey({ name: 'ECDH', namedCurve: 'P-256' }, true, ['deriveBits']);
+  const jwk = await ssSubtle.exportKey('jwk', kp.privateKey);
+  const raw = new Uint8Array(await ssSubtle.exportKey('raw', kp.publicKey));
+  return { jwk: jwk, pub: 'pk.' + ssB64u(ssCompress(raw)), rawPub: raw };
+}
+
+function ssPubFromJwk(jwk){
+  const x = ssUnb64u(jwk.x);
+  const y = ssUnb64u(jwk.y);
+  if (x.length !== 32 || y.length !== 32) throw new Error('bad_jwk');
+  const raw = new Uint8Array(65);
+  raw[0] = 4;
+  raw.set(x, 1);
+  raw.set(y, 33);
+  return 'pk.' + ssB64u(ssCompress(raw));
+}
+
+/* ============ конверты (ECIES P-256 + AES-GCM) ============ */
+
+async function ssSeal(pubCode, obj){
+  if (!ssSubtle) throw new Error('no_crypto');
+  const recipientRaw = ssCheckKey(pubCode);
+  const recipient = await ssSubtle.importKey('raw', recipientRaw, { name: 'ECDH', namedCurve: 'P-256' }, false, []);
+  const eph = await ssSubtle.generateKey({ name: 'ECDH', namedCurve: 'P-256' }, true, ['deriveBits']);
+  const shared = await ssSubtle.deriveBits({ name: 'ECDH', public: recipient }, eph.privateKey, 256);
+  const aes = await ssSubtle.importKey('raw', shared, { name: 'AES-GCM' }, false, ['encrypt']);
+  const iv = globalThis.crypto.getRandomValues(new Uint8Array(12));
+  const ct = new Uint8Array(await ssSubtle.encrypt({ name: 'AES-GCM', iv: iv }, aes, ssEnc.encode(JSON.stringify(obj))));
+  const payload = new Uint8Array(iv.length + ct.length);
+  payload.set(iv, 0);
+  payload.set(ct, iv.length);
+  const ephRaw = new Uint8Array(await ssSubtle.exportKey('raw', eph.publicKey));
+  return 'k1.' + ssB64u(ssCompress(ephRaw)) + '.' + ssB64u(payload);
+}
+
+async function ssOpen(jwk, code){
+  if (!ssSubtle) throw new Error('no_crypto');
+  const c = String(code == null ? '' : code).trim().replace(/\s+/g, '');
+  if (c.indexOf('k1.') !== 0) throw new Error('bad_format');
+  const parts = c.split('.');
+  if (parts.length !== 3) throw new Error('bad_format');
+  const ephRaw = ssDecompress(ssUnb64u(parts[1]));
+  const eph = await ssSubtle.importKey('raw', ephRaw, { name: 'ECDH', namedCurve: 'P-256' }, false, []);
+  const priv = await ssSubtle.importKey('jwk', jwk, { name: 'ECDH', namedCurve: 'P-256' }, false, ['deriveBits']);
+  const shared = await ssSubtle.deriveBits({ name: 'ECDH', public: eph }, priv, 256);
+  const aes = await ssSubtle.importKey('raw', shared, { name: 'AES-GCM' }, false, ['decrypt']);
+  const payload = ssUnb64u(parts[2]);
+  if (payload.length < 13) throw new Error('bad_format');
+  const ct = await ssSubtle.decrypt({ name: 'AES-GCM', iv: payload.subarray(0, 12) }, aes, payload.subarray(12));
+  return JSON.parse(ssDec.decode(ct));
+}
+
+/* ============ разбор строк с ключами ============ */
+
+function ssParseKeys(text){
+  const entries = [];
+  const errors = [];
+  const lines = String(text == null ? '' : text).split(/\r?\n/);
+  for (let i = 0; i < lines.length; i++){
+    const line = lines[i].trim();
+    if (!line) continue;
+    if (/^pk\./.test(line)){
+      errors.push('Строка ' + (i + 1) + ': добавь имя перед кодом — «Аня: ' + line.slice(0, 12) + '…»');
+      continue;
+    }
+    const cut = line.search(/[:—–\t]/);
+    if (cut < 1){
+      errors.push('Строка ' + (i + 1) + ': нужен формат «Имя: pk.…»');
+      continue;
+    }
+    const name = line.slice(0, cut).trim();
+    const key = line.slice(cut).replace(/^[:—–\t\s]+/, '').trim();
+    if (!/^pk\.[A-Za-z0-9_-]+$/.test(key)){
+      errors.push('Строка ' + (i + 1) + ' («' + name + '»): код ключа повреждён');
+      continue;
+    }
+    entries.push({ name: name, key: key, line: i + 1 });
   }
-  throw new Error('bad_format');
+  return { entries: entries, errors: errors };
 }
 </script>
 
@@ -312,14 +477,17 @@ async function ssOpen(code){
 (function () {
   'use strict';
 
-  const LS_KEY = 'secret_santa_draw_v1';
-  const $ = (sel, root) => (root || document).querySelector(sel);
+  const DRAW_KEY = 'ss_draw_v3';
+  const KEY_KEY  = 'ss_key_v3';
+  const $ = function (sel, root) { return (root || document).querySelector(sel); };
 
   const namesEl  = $('#names');
+  const keysEl   = $('#keys');
   const budgetEl = $('#budget');
   const dateEl   = $('#date');
   const urlEl    = $('#url');
   const errEl    = $('#err');
+  const keyStatusEl = $('#key-status');
   const resultEl = $('#result');
   const codeEl   = $('#code');
   const meErrEl  = $('#me-err');
@@ -327,26 +495,32 @@ async function ssOpen(code){
   const toastEl  = $('#toast');
 
   let state = null;
+  let myKey = null;
   let toastTimer = null;
 
-  /* ---------- helpers ---------- */
+  /* ---------------- мелочи UI ---------------- */
 
-  function el(tag, props, ...kids) {
+  function el(tag, props) {
     const node = document.createElement(tag);
+    const kids = Array.prototype.slice.call(arguments, 2);
     if (props) {
-      for (const k of Object.keys(props)) {
+      Object.keys(props).forEach(function (k) {
         const v = props[k];
-        if (v === null || v === undefined) continue;
+        if (v === null || v === undefined) return;
         if (k === 'class') node.className = v;
         else if (k === 'text') node.textContent = v;
         else if (k.indexOf('on') === 0) node.addEventListener(k.slice(2).toLowerCase(), v);
         else node.setAttribute(k, v);
-      }
+      });
     }
-    for (const kid of kids.flat()) {
-      if (kid === null || kid === undefined || kid === false) continue;
-      node.append(kid.nodeType ? kid : document.createTextNode(String(kid)));
-    }
+    kids.forEach(function (kid) {
+      if (kid === null || kid === undefined || kid === false) return;
+      if (Array.isArray(kid)) kid.forEach(function (k2) {
+        if (k2 === null || k2 === undefined) return;
+        node.append(k2.nodeType ? k2 : document.createTextNode(String(k2)));
+      });
+      else node.append(kid.nodeType ? kid : document.createTextNode(String(kid)));
+    });
     return node;
   }
 
@@ -354,7 +528,7 @@ async function ssOpen(code){
     toastEl.textContent = msg;
     toastEl.classList.add('show');
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1900);
+    toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 1900);
   }
 
   async function copyText(text) {
@@ -362,7 +536,7 @@ async function ssOpen(code){
       if (navigator.clipboard && window.isSecureContext) {
         await navigator.clipboard.writeText(text);
       } else {
-        throw new Error('no clipboard api');
+        throw new Error('no clipboard');
       }
     } catch (e) {
       const ta = document.createElement('textarea');
@@ -378,6 +552,17 @@ async function ssOpen(code){
     toast('Скопировано ✓');
   }
 
+  function download(name, text, mime) {
+    const blob = new Blob([text], { type: mime || 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.append(a);
+    a.click();
+    a.remove();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 3000);
+  }
+
   function initials(name) {
     const chars = Array.from(String(name).trim());
     return (chars[0] || '?').toLocaleUpperCase('ru');
@@ -386,29 +571,32 @@ async function ssOpen(code){
   function parseNames(raw) {
     let parts = String(raw).split(/\r?\n/);
     if (parts.length === 1 && parts[0].indexOf(',') >= 0) parts = parts[0].split(',');
-    return parts
-      .map(s => s.replace(/\s+/g, ' ').trim())
-      .filter(Boolean);
+    return parts.map(function (s) { return s.replace(/\s+/g, ' ').trim(); }).filter(Boolean);
   }
 
-  function save() {
+  function autoGrow(node, max) {
+    const cap = max || 320;
+    node.style.height = 'auto';
+    const h = Math.min(node.scrollHeight + 2, cap);
+    node.style.height = h + 'px';
+    node.style.overflowY = node.scrollHeight > cap ? 'auto' : 'hidden';
+  }
+
+  function store(key, value) {
     try {
-      if (state) localStorage.setItem(LS_KEY, JSON.stringify(state));
-      else localStorage.removeItem(LS_KEY);
+      if (value === null) localStorage.removeItem(key);
+      else localStorage.setItem(key, JSON.stringify(value));
     } catch (e) { /* приватный режим — просто не сохраняем */ }
   }
 
-  function load() {
+  function restore(key) {
     try {
-      const raw = localStorage.getItem(LS_KEY);
-      if (!raw) return null;
-      const s = JSON.parse(raw);
-      if (!s || !Array.isArray(s.cards) || !s.cards.length) return null;
-      return s;
+      const raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : null;
     } catch (e) { return null; }
   }
 
-  /* ---------- tabs ---------- */
+  /* ---------------- вкладки ---------------- */
 
   function showTab(which) {
     const org = which === 'org';
@@ -416,66 +604,130 @@ async function ssOpen(code){
     $('#tab-me').hidden = org;
     $('#tabbtn-org').classList.toggle('active', org);
     $('#tabbtn-me').classList.toggle('active', !org);
+    if (org) { autoGrow(namesEl, 300); autoGrow(keysEl, 340); }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  /* ---------- organizer ---------- */
+  /* ---------------- статус ключей ---------------- */
+
+  function updateKeyStatus() {
+    const roster = parseNames(namesEl.value);
+    const parsed = ssParseKeys(keysEl.value);
+    if (!roster.length && !parsed.entries.length) {
+      keyStatusEl.textContent = '';
+      keyStatusEl.className = 'hint';
+      return;
+    }
+    const have = new Set(parsed.entries.map(function (e) { return ssNorm(e.name); }));
+    const missing = roster.filter(function (n) { return !have.has(ssNorm(n)); });
+    const extra = parsed.entries.filter(function (e) {
+      return !roster.some(function (n) { return ssNorm(n) === ssNorm(e.name); });
+    });
+
+    let msg = 'Ключей: ' + (roster.length - missing.length) + ' из ' + roster.length;
+    if (missing.length) msg += ' · ждём: ' + missing.join(', ');
+    if (extra.length) msg += ' · лишние: ' + extra.map(function (e) { return e.name; }).join(', ');
+
+    keyStatusEl.textContent = msg;
+    keyStatusEl.className = 'hint' + (missing.length || extra.length ? ' warn2' : ' ok2');
+  }
+
+  /* ---------------- организатор ---------------- */
 
   function cardMessage(card) {
     const lines = ['🎅 Тайный Санта', ''];
+    if (state.budget) lines.push('Бюджет: ' + state.budget);
+    if (state.date) lines.push('Дата: ' + state.date);
+    if (state.budget || state.date) lines.push('');
+
     if (state.url) {
-      lines.push('Открой свой конверт по ссылке:');
+      lines.push('Твой конверт — по ссылке:');
       lines.push(state.url.replace(/#.*$/, '') + '#s=' + card.code);
-      lines.push('');
-      lines.push('Или вкладка «Мой конверт» → вставь код:');
     } else {
       lines.push('Твой конверт. Открой страницу «Тайный Санта» → вкладка «Мой конверт» → вставь код:');
+      lines.push(card.code);
     }
-    lines.push(card.code);
     lines.push('');
-    lines.push('Никому не показывай этот код 🙂');
+    lines.push('Код открывается только твоим ключом. Никому его не показывай 🙂');
     return lines.join('\n');
+  }
+
+  function hasHostedUrl() {
+    return /^https?:\/\//i.test(state && state.url ? state.url : '');
+  }
+
+  function shareLink(card) {
+    return state.url.replace(/#.*$/, '') + '#s=' + card.code;
+  }
+
+  function shareCaption() {
+    const parts = ['🎅 Тайный Санта — твой конверт'];
+    const meta = [];
+    if (state.budget) meta.push('Бюджет: ' + state.budget);
+    if (state.date) meta.push('Дата: ' + state.date);
+    if (meta.length) parts.push(meta.join(' · '));
+    parts.push('Открой ссылку — там имя получателя. Ссылку никому не пересылай.');
+    return parts.join('\n');
+  }
+
+  function openTelegram(card) {
+    const u = 'https://t.me/share/url?url=' + encodeURIComponent(shareLink(card)) +
+              '&text=' + encodeURIComponent(shareCaption());
+    window.open(u, '_blank', 'noopener');
+    toast('Открываю Telegram…');
   }
 
   function renderResult() {
     resultEl.textContent = '';
-    if (!state || !state.cards.length) { resultEl.hidden = true; return; }
+    if (!state || !state.cards || !state.cards.length) { resultEl.hidden = true; return; }
     resultEl.hidden = false;
 
     resultEl.append(el('div', { class: 'card result-head' },
       el('p', { class: 'ok-line', text: 'Готово: ' + state.cards.length + ' участников, никто не дарит сам себе и без взаимных пар.' }),
-      el('p', { class: 'hint', text: 'Отправь каждому его сообщение в личку. Коды спрятаны — жми «Показать», только если нужно посмотреть. Конверт открывается тем, кому он предназначен.' })
+      el('p', { class: 'hint', text: 'Каждый код зашифрован на ключ получателя — прочитать его может только он. Пары страница не показывает и не сохраняет.' }),
+      hasHostedUrl()
+        ? el('p', { class: 'hint', text: 'Жми «В Telegram» — откроется Telegram, выбери человека и отправь. Ему придёт ссылка, по которой конверт откроется сразу.' })
+        : el('p', { class: 'hint warn', text: 'Кнопка «В Telegram» появится, когда страница будет опубликована по http(s): ссылка подставится сама. Пока можно отправлять код вручную.' })
     ));
 
-    for (const card of state.cards) {
+    state.cards.forEach(function (card) {
       const codeNode = el('code', { class: 'code', text: card.code });
       codeNode.hidden = true;
       const toggle = el('button', {
         class: 'btn ghost sm',
-        onclick: () => {
+        onclick: function () {
           codeNode.hidden = !codeNode.hidden;
           toggle.textContent = codeNode.hidden ? '👁 Показать код' : '🙈 Скрыть код';
         }
       }, '👁 Показать код');
+
+      const actions = [];
+      if (hasHostedUrl()) {
+        actions.push(el('button', {
+          class: 'btn tg sm',
+          onclick: function () { openTelegram(card); }
+        }, '➤ В Telegram'));
+      }
+      actions.push(
+        el('button', { class: 'btn ghost sm', onclick: function () { copyText(cardMessage(card)); } }, '💬 Сообщение'),
+        el('button', { class: 'btn ghost sm', onclick: function () { copyText(card.code); } }, '📋 Код'),
+        toggle
+      );
 
       resultEl.append(el('div', { class: 'pcard' },
         el('div', { class: 'pcard-head' },
           el('span', { class: 'avatar', text: initials(card.name) }),
           el('span', { class: 'pname', text: card.name })
         ),
-        el('div', { class: 'pactions' },
-          el('button', { class: 'btn ghost sm', onclick: () => copyText(card.code) }, '📋 Код'),
-          el('button', { class: 'btn sm', onclick: () => copyText(cardMessage(card)) }, '💬 Сообщение'),
-          toggle
-        ),
+        el('div', { class: 'pactions' }, actions),
         codeNode
       ));
-    }
+    });
 
     resultEl.append(el('div', { class: 'card' },
       el('button', {
         class: 'btn ghost block',
-        onclick: () => copyText(state.cards.map(cardMessage).join('\n\n———\n\n'))
+        onclick: function () { copyText(state.cards.map(cardMessage).join('\n\n———\n\n')); }
       }, '📋 Скопировать все сообщения'),
       el('button', { class: 'btn ghost block', onclick: backup }, '💾 Скачать резервную копию'),
       el('button', { class: 'btn danger block', onclick: resetDraw }, '🗑 Сбросить жеребьёвку')
@@ -484,36 +736,67 @@ async function ssOpen(code){
 
   function backup() {
     if (!state) return;
-    const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'secret-santa-backup.json';
-    document.body.append(a);
-    a.click();
-    a.remove();
-    setTimeout(() => URL.revokeObjectURL(a.href), 3000);
+    download('secret-santa-backup.json', JSON.stringify(state, null, 2));
     toast('Копия сохранена');
   }
 
   function resetDraw() {
-    if (!confirm('Сбросить жеребьёвку? Все коды будут удалены (имена останутся, можно провести заново).')) return;
+    if (!confirm('Сбросить жеребьёвку? Все коды будут удалены (имена и ключи останутся).')) return;
     state = null;
-    save();
+    store(DRAW_KEY, null);
     renderResult();
     toast('Сброшено');
   }
 
   async function draw() {
     errEl.textContent = '';
-    const names = parseNames(namesEl.value);
-    if (names.length < 3) {
+    const roster = parseNames(namesEl.value);
+
+    if (roster.length < 3) {
       errEl.textContent = 'Нужно минимум 3 человека — иначе жеребьёвка невозможна: кто-то получит сам себя или останется без пары.';
       return;
     }
-    const lows = names.map(n => n.toLocaleLowerCase('ru'));
+    const lows = roster.map(ssNorm);
     if (new Set(lows).size !== lows.length) {
       errEl.textContent = 'Имена повторяются. Сделай их уникальными — например, «Аня К.» и «Аня П.».';
       return;
+    }
+
+    const parsed = ssParseKeys(keysEl.value);
+    if (parsed.errors.length) { errEl.textContent = parsed.errors[0]; return; }
+
+    const byName = new Map();
+    const dupes = [];
+    parsed.entries.forEach(function (e) {
+      const k = ssNorm(e.name);
+      if (byName.has(k)) dupes.push(e.name);
+      else byName.set(k, e);
+    });
+    if (dupes.length) {
+      errEl.textContent = 'Ключ указан дважды: ' + dupes.join(', ') + '.';
+      return;
+    }
+
+    const missing = roster.filter(function (n) { return !byName.has(ssNorm(n)); });
+    if (missing.length) {
+      errEl.textContent = 'Нет ключа у: ' + missing.join(', ') + '. Пусть каждый пришлёт строку «Имя: pk.…».';
+      return;
+    }
+    const extra = parsed.entries.filter(function (e) {
+      return !roster.some(function (n) { return ssNorm(n) === ssNorm(e.name); });
+    });
+    if (extra.length) {
+      errEl.textContent = 'В списке участников нет: ' + extra.map(function (e) { return e.name; }).join(', ') + '. Убери лишние строки или добавь их в список.';
+      return;
+    }
+
+    for (let i = 0; i < roster.length; i++) {
+      try {
+        ssCheckKey(byName.get(ssNorm(roster[i])).key);
+      } catch (e) {
+        errEl.textContent = 'Ключ участника «' + roster[i] + '» повреждён — попроси прислать заново.';
+        return;
+      }
     }
 
     const btn = $('#draw');
@@ -522,20 +805,25 @@ async function ssOpen(code){
     btn.textContent = 'Тасуем…';
 
     try {
-      const assignment = ssMakeAssignment(names);
+      let assignment = ssMakeAssignment(roster);
       if (!assignment) throw new Error('no assignment');
 
       const budget = budgetEl.value.trim();
       const date = dateEl.value.trim();
       const url = urlEl.value.trim();
       const cards = [];
-      for (let i = 0; i < names.length; i++) {
-        const code = await ssSeal({ t: names[assignment[i]], b: budget, d: date });
-        cards.push({ name: names[i], code: code });
-      }
 
-      state = { names: names, budget: budget, date: date, url: url, cards: cards, created: Date.now() };
-      save();
+      for (let i = 0; i < roster.length; i++) {
+        // Пара существует только здесь и только сейчас:
+        // имя получателя сразу шифруется на ключ дарящего и дальше не используется.
+        const code = await ssSeal(byName.get(ssNorm(roster[i])).key, { t: roster[assignment[i]] });
+        cards.push({ name: roster[i], code: code });
+      }
+      assignment.fill(-1);
+      assignment = null;
+
+      state = { v: 3, names: roster, keys: keysEl.value, budget: budget, date: date, url: url, cards: cards, created: Date.now() };
+      store(DRAW_KEY, state);
       renderResult();
       resultEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
       toast('Жеребьёвка готова 🎉');
@@ -547,27 +835,98 @@ async function ssOpen(code){
     }
   }
 
-  /* ---------- participant ---------- */
+  /* ---------------- ключ участника ---------------- */
+
+  function saveMyKey() {
+    if (!myKey) return;
+    store(KEY_KEY, { jwk: myKey.jwk, pub: myKey.pub, name: myKey.name || '' });
+  }
+
+  function loadMyKey() {
+    const o = restore(KEY_KEY);
+    if (!o || !o.jwk || !o.pub) return null;
+    try {
+      if (ssPubFromJwk(o.jwk) !== o.pub) return null;
+    } catch (e) { return null; }
+    return { jwk: o.jwk, pub: o.pub, name: o.name || '' };
+  }
+
+  function renderKey() {
+    const none = $('#key-none');
+    const has = $('#key-has');
+    if (!myKey) {
+      none.hidden = false;
+      has.hidden = true;
+      return;
+    }
+    none.hidden = true;
+    has.hidden = false;
+    $('#pubkey').textContent = myKey.pub;
+    if ($('#myname').value !== (myKey.name || '')) $('#myname').value = myKey.name || '';
+  }
+
+  async function createKey() {
+    const btn = $('#makekey');
+    btn.disabled = true;
+    btn.textContent = 'Создаём…';
+    try {
+      const k = await ssKeygen();
+      myKey = { jwk: k.jwk, pub: k.pub, name: '' };
+      saveMyKey();
+      renderKey();
+      toast('Ключ создан 🔑');
+    } catch (e) {
+      toast('Не получилось создать ключ');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '🔑 Создать мой ключ';
+    }
+  }
+
+  function keyLine() {
+    const n = $('#myname').value.trim();
+    return (n ? n + ': ' : '') + myKey.pub;
+  }
+
+  function saveKeyFile() {
+    if (!myKey) return;
+    download('secret-santa-key.json', JSON.stringify({
+      kind: 'secret-santa-key',
+      v: 1,
+      name: myKey.name || '',
+      pub: myKey.pub,
+      jwk: myKey.jwk
+    }, null, 2));
+    toast('Файл ключа сохранён');
+  }
+
+  async function restoreKeyFile(file) {
+    const text = await file.text();
+    const o = JSON.parse(text);
+    if (!o || !o.jwk || !o.pub) throw new Error('bad file');
+    if (ssPubFromJwk(o.jwk) !== o.pub) throw new Error('key mismatch');
+    myKey = { jwk: o.jwk, pub: o.pub, name: o.name || '' };
+    saveMyKey();
+    renderKey();
+    toast('Ключ восстановлен 🔑');
+  }
+
+  /* ---------------- конверт участника ---------------- */
 
   function renderEnvelope(data) {
     envEl.textContent = '';
     envEl.hidden = false;
 
-    const metaBits = [];
-    if (data.b) metaBits.push('Бюджет: ' + data.b);
-    if (data.d) metaBits.push('Дата: ' + data.d);
-
     envEl.append(el('div', { class: 'card envelope' },
       el('div', { class: 'env-label', text: '🎁 Твой получатель' }),
       el('div', { class: 'env-name', text: data.t }),
-      metaBits.length ? el('div', { class: 'env-meta', text: metaBits.join(' · ') }) : null,
       el('p', { class: 'hint warn', text: 'Никому не показывай этот экран — иначе сюрприза не будет 🙂' })
     ));
 
     envEl.append(el('p', { class: 'switch-hint' },
       el('a', {
         href: '#',
-        onclick: (e) => {
+        onclick: function (e) {
           e.preventDefault();
           envEl.hidden = true;
           $('#paste-card').hidden = false;
@@ -583,14 +942,14 @@ async function ssOpen(code){
   async function openEnvelope() {
     meErrEl.textContent = '';
     const raw = codeEl.value;
-    if (!raw.trim()) {
-      $('#paste-card').hidden = false;
-      meErrEl.textContent = 'Вставь код, который прислал организатор.';
+    if (!raw.trim()) { meErrEl.textContent = 'Вставь код, который прислал организатор.'; return; }
+    if (!myKey) {
+      meErrEl.textContent = 'В этом браузере нет твоего ключа. Создай его в блоке «Твой ключ» выше — или восстанови из файла.';
       return;
     }
 
     try {
-      const data = await ssOpen(raw);
+      const data = await ssOpen(myKey.jwk, raw);
       if (!data || typeof data.t !== 'string' || !data.t) throw new Error('bad payload');
       $('#paste-card').hidden = true;
       renderEnvelope(data);
@@ -598,11 +957,15 @@ async function ssOpen(code){
     } catch (e) {
       envEl.hidden = true;
       $('#paste-card').hidden = false;
-      meErrEl.textContent = 'Не получилось открыть конверт. Проверь, что код скопирован целиком и без лишних символов.';
+      if (e && (e.name === 'OperationError' || e.message === 'bad_format')) {
+        meErrEl.textContent = 'Конверт не открывается этим ключом. Похоже, код от другого участника или скопирован не полностью.';
+      } else {
+        meErrEl.textContent = 'Не получилось открыть конверт. Проверь код целиком.';
+      }
     }
   }
 
-  /* ---------- init ---------- */
+  /* ---------------- запуск ---------------- */
 
   function codeFromHash() {
     const h = location.hash || '';
@@ -613,7 +976,7 @@ async function ssOpen(code){
   function initSnow() {
     const box = document.querySelector('.snow');
     if (!box) return;
-    const flake = document.createDocumentFragment();
+    const frag = document.createDocumentFragment();
     for (let i = 0; i < 16; i++) {
       const s = document.createElement('span');
       s.textContent = i % 3 === 0 ? '❄' : '·';
@@ -622,31 +985,65 @@ async function ssOpen(code){
       s.style.opacity = (0.18 + Math.random() * 0.3).toFixed(2);
       s.style.animationDuration = (9 + Math.random() * 14).toFixed(1) + 's';
       s.style.animationDelay = (-Math.random() * 20).toFixed(1) + 's';
-      flake.appendChild(s);
+      frag.appendChild(s);
     }
-    box.appendChild(flake);
+    box.appendChild(frag);
   }
 
   function init() {
     initSnow();
 
-    const saved = load();
-    if (saved) {
+    myKey = loadMyKey();
+    renderKey();
+
+    const saved = restore(DRAW_KEY);
+    if (saved && Array.isArray(saved.cards) && saved.cards.length) {
       state = saved;
       namesEl.value = (saved.names || []).join('\n');
+      keysEl.value = saved.keys || '';
       budgetEl.value = saved.budget || '';
       dateEl.value = saved.date || '';
       urlEl.value = saved.url || '';
       renderResult();
     }
+    if (!urlEl.value && /^https?:$/.test(location.protocol)) {
+      urlEl.value = location.href.replace(/#.*$/, '');
+    }
+    updateKeyStatus();
+    autoGrow(namesEl, 300);
+    autoGrow(keysEl, 340);
 
     $('#draw').addEventListener('click', draw);
     $('#open').addEventListener('click', openEnvelope);
-    $('#tabbtn-org').addEventListener('click', () => showTab('org'));
-    $('#tabbtn-me').addEventListener('click', () => showTab('me'));
-    $('#goto-me').addEventListener('click', (e) => { e.preventDefault(); showTab('me'); codeEl.focus(); });
+    $('#makekey').addEventListener('click', createKey);
+    $('#tabbtn-org').addEventListener('click', function () { showTab('org'); });
+    $('#tabbtn-me').addEventListener('click', function () { showTab('me'); });
+    $('#goto-me').addEventListener('click', function (e) { e.preventDefault(); showTab('me'); });
 
-    codeEl.addEventListener('keydown', (e) => {
+    namesEl.addEventListener('input', function () { autoGrow(namesEl, 300); updateKeyStatus(); });
+    keysEl.addEventListener('input', function () { autoGrow(keysEl, 340); updateKeyStatus(); });
+
+    $('#myname').addEventListener('input', function () {
+      if (!myKey) return;
+      myKey.name = $('#myname').value.trim();
+      saveMyKey();
+    });
+
+    $('#copykey').addEventListener('click', function () {
+      if (!myKey) return;
+      copyText(keyLine());
+    });
+    $('#savekey').addEventListener('click', saveKeyFile);
+    $('#loadkey').addEventListener('click', function () { $('#keyfile').click(); });
+    $('#keyfile').addEventListener('change', async function (e) {
+      const f = e.target.files && e.target.files[0];
+      e.target.value = '';
+      if (!f) return;
+      try { await restoreKeyFile(f); }
+      catch (err) { toast('Это не файл ключа от этой страницы'); }
+    });
+
+    codeEl.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); openEnvelope(); }
     });
 
@@ -656,11 +1053,6 @@ async function ssOpen(code){
       codeEl.value = hashCode;
       openEnvelope();
     }
-
-    window.addEventListener('hashchange', () => {
-      const c = codeFromHash();
-      if (c) { showTab('me'); codeEl.value = c; openEnvelope(); }
-    });
   }
 
   if (document.readyState === 'loading') {
